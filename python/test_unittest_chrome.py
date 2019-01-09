@@ -15,7 +15,7 @@ class TestW3COptions(unittest.TestCase):
             "platformName": "Windows 10",
             "browserVersion": "61.0",
             "seleniumVersion": "3.11.0",
-            'name': 'Pytest Chrome W3C Sample'
+            'name': 'Unittest Chrome W3C Sample'
         }
 
         chromeOpts =  {

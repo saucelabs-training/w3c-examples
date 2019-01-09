@@ -15,7 +15,7 @@ class TestW3COptions(unittest.TestCase):
             "platformName": "Windows 10",
             "browserVersion": "60.0",
             "seleniumVersion": "3.11.0",
-            'name': 'Pytest Firefox W3C Sample'
+            'name': 'Unittest Firefox W3C Sample'
         }
 
         caps =  {
