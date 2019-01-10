@@ -11,24 +11,25 @@ var webdriver = require('selenium-webdriver'),
     accessKey = process.env.SAUCE_ACCESS_KEY,
     /* Change the baseURL to your application URL */
     baseUrl = "https://www.saucedemo.com",
-    tags = ["sauceDemo", "demoTest", "module4", "nodeTest"],
+    tags = ["w3c", "demoTest", "w3c-firefox-tests", "nodeTest"],
     driver;
 /** 
     We use 'describe' in order to group test methods together. Even though we only have one test case in this example,
     structuring your project this way makes it scalable when you add tests. We can also set global-level test execution parameters such as timeouts
 */
-describe('Instant Sauce Test Module 4', function() {
+describe('W3C Test', function() {
     this.timeout(40000);
     /**
         'beforeEach' is a Mocha test suite hook that allows us to set any prerequisite test method tasks. In this example we set:
         - SauceLabs.com credentials via username and accessKey
-        - Browser to chrome
+        - Browser to firefox
         - OS platform to Windows 10
         - The name of the test
         - and our "sauce:options" object, here we set other test parameters such as the:
             - selenium version, 
             - the build name/number, 
-            -test-level timeouts
+            - test-level timeouts,
+            - test case tags
         For more information on 'beforeEach' consult the docs: https://mochajs.org/api/mocha.suite#beforeEach
     */
     beforeEach(function (done) {
@@ -37,16 +38,16 @@ describe('Instant Sauce Test Module 4', function() {
             "browserName": 'chrome',
             "platform": 'Windows 10',
             "version": '61.0',
-            "tags": tags,
             "name": testName.toString(),
             "username": username,
             "accessKey": accessKey,
             "sauce:options": {
-                "goog:chromeOptions": {"wc3":true},
+                "moz:firefoxOptions": {"wc3":true},
                 "maxDuration": 3600,
                 "idleTimeout": 1000,
                 "seleniumVersion:": '3.11.0',
-                "build": 'instant-sauce-mocha-tests'
+                "tags": tags,
+                "build": 'w3c-sauce-mocha-tests'
             }
         }).usingServer("https://ondemand.saucelabs.com:443/wd/hub").build();
 
@@ -79,7 +80,7 @@ describe('Instant Sauce Test Module 4', function() {
             For more information visit the docs: https://mochajs.org/api/test
     */
 
-    it('should-open-chrome', function (done) {
+    it('start-W3C-firefox-session', function (done) {
         driver.get(baseUrl);
         driver.getTitle().then(function (title) {
             console.log("title is: " + title);

@@ -1,39 +1,25 @@
-package tests.base;
-
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.rules.TestName;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class BaseSauceJunit4  {
+public class W3CChromeTest {
     protected WebDriver driver;
     public Boolean result;
     
      /**
-         * @Rule is a JUnit 4 annotation that defines specific test method behaviors.
-            For more information visit the wiki: https://github.com/junit-team/junit4/wiki/rules
-    */
-
-    @Rule
-    public TestName testName = new TestName() {
-        public String getMethodName() {
-            return String.format("%s", super.getMethodName());
-        }
-    };
-    
-     /**
-         * @Before is a JUnit 4 annotation that defines specific prerequisite test method behaviors.
+         * @BeforeEach is a JUnit 5 annotation that defines specific prerequisite test method behaviors.
             In the example below we:
             - Define Environment Variables for Sauce Credentials ("SAUCE_USERNAME" and "SAUCE_ACCESS_KEY")
             - Define Chrome Options such as W3C protocol
@@ -43,14 +29,14 @@ public class BaseSauceJunit4  {
             - Set the URL to sauceURl
             - Set the driver instance to a RemoteWebDriver
             - Pass "url" and "caps" as parameters of the RemoteWebDriver
-            For more information visit the docs: https://junit.org/junit4/javadoc/4.12/org/junit/Before.html
+            For more information visit the docs: https://junit.org/junit5/docs/5.0.2/api/org/junit/jupiter/api/BeforeEach.html
     */
 
-    @Before
-    public void setup() throws MalformedURLException {
+    @BeforeEach
+    public void setup(TestInfo testInfo) throws MalformedURLException {
         String username = System.getenv("SAUCE_USERNAME");
         String accessKey = System.getenv("SAUCE_ACCESS_KEY");
-        String methodName = testName.getMethodName();
+        String methodName = testInfo.getDisplayName();
         
         /** ChomeOptions allows us to set browser-specific behavior such as profile settings, headless capabilities, insecure tls certs, 
         and in this example--the W3C protocol 
@@ -68,55 +54,65 @@ public class BaseSauceJunit4  {
         sauceOpts.setCapability("seleniumVersion", "3.11.0");
         sauceOpts.setCapability("user", username);
         sauceOpts.setCapability("accessKey", accessKey);
+        sauceOpts.setCapability("tags", testInfo.getTags());
+
         
         /** Below we see the use of our other capability objects, 'chromeOpts' and 'sauceOpts', 
         defined in ChromeOptions.CAPABILITY and sauce:options respectively.
         */
         DesiredCapabilities caps = new DesiredCapabilities();
-        caps.setCapability(ChromeOptions.CAPABILITY, chromeOpts);
+        caps.setCapability(ChromeOptions.CAPABILITY,  chromeOpts);
         caps.setCapability("sauce:options", sauceOpts);
         caps.setCapability("browserName", "googlechrome");
         caps.setCapability("browserVersion", "61.0");
         caps.setCapability("platformName", "windows 10");
         
         /** Finally, we pass our DesiredCapabilities object 'caps' as a parameter of our RemoteWebDriver instance */
-        String sauceUrl = "https://" + username + ":" + accessKey + "@ondemand.saucelabs.com/wd/hub";
+        String sauceUrl = "https://"+username+":"+accessKey+"@ondemand.saucelabs.com/wd/hub";
         URL url = new URL(sauceUrl);
         driver = new RemoteWebDriver(url, caps);
     }
-
-     /**
-         * @Test is a JUnit 4 annotation that defines the actual test case, along with the test execution commands.
+    /**
+         * @Tag is a JUnit 5 annotation that defines test method tags that aid in reporting and filtering tests.
+            For more information visit the docs: https://junit.org/junit5/docs/5.0.2/api/org/junit/jupiter/api/Tag.html
+           
+    */
+    @Tag("w3c-chrome-tests")
+    /**
+         * @DisplayName is a JUnit 5 annotation that defines test case name.
+            For more information visit the docs: https://junit.org/junit5/docs/5.0.2/api/org/junit/jupiter/api/DisplayName.html
+           
+    */
+    @DisplayName("w3cChromeTest()")
+    /**
+         * @Test is a JUnit 5 annotation that defines the actual test case, along with the test execution commands.
             In the example below we:
             - Navigate to our SUT (site under test), 'https://www.saucedemo.com'
             - Store the current page title in a String called 'getTitle'
             - Assert that the page title equals "Swag Labs"
             - Use and If/Else block to determine String match
-            For more information visit the docs: https://junit.org/junit4/javadoc/4.12/org/junit/Test.html
+            For more information visit the docs: https://junit.org/junit5/docs/5.0.2/api/org/junit/jupiter/api/Test.html
     */
-   @Test
-    public void browserTest() throws AssertionError {
+    @Test
+    public void w3cChromeTest() throws AssertionError {
         driver.navigate().to("https://www.saucedemo.com");
         String getTitle = driver.getTitle();
-        Assert.assertEquals(getTitle, "Swag Labs");
+        Assertions.assertEquals(getTitle, "Swag Labs");
         if (getTitle.equals("Swag Labs")) {
             result = true;
         }else result = false;
     }
-
     /**
-         * @After is a JUnit 4 annotation that defines any postrequisite test method tasks .
+         * @AfterEach is a JUnit 5 annotation that defines any postrequisite test method tasks .
             In the example below we:
             - Use the JavascriptExecutor class to send our test results to Sauce Labs with a "passed" flag
                 if the test was successful, or a"failed" flag if the test was unsuccessful.
             - Teardown the RemoteWebDriver session with a 'driver.quit()' command so that the test VM doesn't hang.
-            For more information visit the docs: https://junit.org/junit4/javadoc/4.12/org/junit/After.html
+            For more information visit the docs: https://junit.org/junit5/docs/5.0.2/api/org/junit/jupiter/api/AfterEach.html
     */
-    @After
+    @AfterEach
     public void teardown() {
         ((JavascriptExecutor) driver).executeScript("sauce:job-result=" + (result ? "passed" : "failed"));
-        System.out.println(result);
         driver.quit();
     }
 }
-
