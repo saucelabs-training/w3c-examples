@@ -51,8 +51,8 @@ public class W3CFirefoxTest {
         
         MutableCapabilities sauceOpts = new MutableCapabilities();
         sauceOpts.setCapability("name", methodName);
-        sauceOpts.setCapability("seleniumVersion", "3.11.0");
-        sauceOpts.setCapability("user", username);
+        sauceOpts.setCapability("seleniumVersion", "3.141.59");
+        sauceOpts.setCapability("username", username);
         sauceOpts.setCapability("accessKey", accessKey);
         sauceOpts.setCapability("tags", testInfo.getTags());
 
@@ -64,11 +64,11 @@ public class W3CFirefoxTest {
         caps.setCapability("moz:firefoxOptions",  foxOpts);
         caps.setCapability("sauce:options", sauceOpts);
         caps.setCapability("browserName", "firefox");
-        caps.setCapability("browserVersion", "53.0");
+        caps.setCapability("browserVersion", "64.0");
         caps.setCapability("platformName", "windows 10");
         
         /** Finally, we pass our DesiredCapabilities object 'caps' as a parameter of our RemoteWebDriver instance */
-        String sauceUrl = "https://"+username+":"+accessKey+"@ondemand.saucelabs.com/wd/hub";
+        String sauceUrl = "https://ondemand.saucelabs.com:443/wd/hub";
         URL url = new URL(sauceUrl);
         driver = new RemoteWebDriver(url, caps);
     }
