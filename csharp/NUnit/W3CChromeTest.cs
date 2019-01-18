@@ -11,7 +11,7 @@ namespace SeleniumNunit.SimpleExamples
 {
     [TestFixture]
     [Category("Selenium 4 tests")]
-    public class Selenium4
+    public class W3CChromeTest
     {
         IWebDriver _driver;
         
