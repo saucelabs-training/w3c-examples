@@ -9,7 +9,7 @@ using OpenQA.Selenium.Remote;
 namespace SeleniumNunit.SimpleExamples
 {
     [TestFixture]
-    public class W3CFireFoxTest
+    public class W3CFirefoxTest
     {
         private IWebDriver driver;
         private string sauceUsername;
