@@ -44,7 +44,7 @@ namespace SeleniumNunit.SimpleExamples
             sauceOptions.Add("name", TestContext.CurrentContext.Test.Name);
 
             // Required for any browser other than Chrome
-            sauceOptions.Add("seleniumVersion", "3.11.0");
+            sauceOptions.Add("seleniumVersion", "3.141.59");
 
             // Set up the browser options
             var ffOptions = new FirefoxOptions();
@@ -64,8 +64,8 @@ namespace SeleniumNunit.SimpleExamples
         /// For more information: https://github.com/nunit/docs/wiki/Test-Attribute
         /// </summary>
         [Test]
-        [Category("W3C Firefox Tests")]
-        public void W3CFirefox()
+        [Category("W3C Firefox Test")]
+        public void W3C_Firefox_Test()
         {
             driver.Navigate().GoToUrl("https://www.saucelabs.com");
             StringAssert.Contains("Sauce Labs", driver.Title);
