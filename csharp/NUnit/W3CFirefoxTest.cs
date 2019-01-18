@@ -39,7 +39,6 @@ namespace SeleniumNunit.SimpleExamples
             // Set up the new Sauce Options for C#
             // For more information: https://wiki.saucelabs.com/display/DOCS/Selenium+W3C+Capabilities+Support+-+Beta
             var sauceOptions = new Dictionary<string, object>();
-
             sauceOptions.Add("username", sauceUsername);
             sauceOptions.Add("accessKey", sauceAccessKey);
             sauceOptions.Add("name", TestContext.CurrentContext.Test.Name);
