@@ -4,7 +4,6 @@ import org.testng.annotations.*;
 import org.testng.asserts.*;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.JavascriptExecutor;
 
@@ -21,7 +20,7 @@ public class W3CChromeTest {
             - Define Environment Variables for Sauce Credentials ("SAUCE_USERNAME" and "SAUCE_ACCESS_KEY")
             - Define Chrome Options such as W3C protocol
             - Define the "sauce:options" capabilities, indicated by the "sauceOpts" MutableCapability object
-            - Define the WebDriver capabilities, indicated by the "caps" DesiredCapabilities object
+            - Define the WebDriver capabilities, indicated by the ChromeOptions object
             - Define the service URL for communicating with SauceLabs.com indicated by "sauceURL" string
             - Set the URL to sauceURl
             - Set the driver instance to a RemoteWebDriver
