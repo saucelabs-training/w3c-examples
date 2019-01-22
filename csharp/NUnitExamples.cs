@@ -17,7 +17,6 @@ namespace SeleniumNunit.SimpleExamples
         private string _sauceUsername;
         private string _sauceAccessKey;
 
-
         /// <summary>
         /// This attribute is to identify methods that are called once prior to executing any of the tests in a fixture. 
         /// For more information: https://github.com/nunit/docs/wiki/OneTimeSetUp-Attribute
@@ -39,8 +38,13 @@ namespace SeleniumNunit.SimpleExamples
         [SetUp]
         public void SetUp()
         {
+            //TODO Add common functionality for each test setup
         }
 
+        /// <summary>
+        /// The Test attribute is one way of marking a method inside a TestFixture class as a test.
+        /// For more information: https://github.com/nunit/docs/wiki/Test-Attribute
+        /// </summary>
         [Test]
         public void W3CChromeTest()
         {
@@ -99,11 +103,17 @@ namespace SeleniumNunit.SimpleExamples
             StringAssert.Contains("Sauce Labs", _driver.Title);
         }
 
+        /// <summary>
+        /// This attribute is used inside a TestFixture to provide a common set of functions that are performed after each test method.
+        /// For more infomration: https://github.com/nunit/docs/wiki/TearDown-Attribute
+        /// </summary>
         [TearDown]
         public void CleanUpAfterEveryTestMethod()
         {
+            //Checks the status of the test and passes the result to the Sauce Labs job
             var passed = TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Passed;
             ((IJavaScriptExecutor)_driver).ExecuteScript("sauce:job-result=" + (passed ? "passed" : "failed"));
+            
             _driver?.Quit();
         }
     }
