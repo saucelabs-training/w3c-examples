@@ -16,7 +16,7 @@ namespace SeleniumNunit.SimpleExamples
         private IWebDriver _driver;
         private string _sauceUsername;
         private string _sauceAccessKey;
-        private Dictionary<string, object> _sauceOptions = new Dictionary<string, object>();
+
 
         /// <summary>
         /// This attribute is to identify methods that are called once prior to executing any of the tests in a fixture. 
@@ -39,14 +39,6 @@ namespace SeleniumNunit.SimpleExamples
         [SetUp]
         public void SetUp()
         {
-            // Set up the new Sauce Options for C#
-            // For more information: https://wiki.saucelabs.com/display/DOCS/Selenium+W3C+Capabilities+Support+-+Beta
-            _sauceOptions.Add("username", _sauceUsername);
-            _sauceOptions.Add("accessKey", _sauceAccessKey);
-            _sauceOptions.Add("name", TestContext.CurrentContext.Test.Name);
-
-            // Required for any browser other than Chrome
-            _sauceOptions.Add("seleniumVersion", "3.141.59");
         }
 
         [Test]
@@ -58,8 +50,14 @@ namespace SeleniumNunit.SimpleExamples
                 PlatformName = "Windows 10",
                 UseSpecCompliantProtocol = true
             };
+            var sauceOptions = new Dictionary<string, object>
+            {
+                ["username"] = _sauceUsername,
+                ["accessKey"] = _sauceAccessKey,
+                ["name"] = TestContext.CurrentContext.Test.Name
+            };
 
-            chromeOptions.AddAdditionalCapability("sauce:options", _sauceOptions, true);
+            chromeOptions.AddAdditionalCapability("sauce:options", sauceOptions, true);
 
             _driver = new RemoteWebDriver(new Uri("https://ondemand.saucelabs.com/wd/hub"),
                 chromeOptions.ToCapabilities(), TimeSpan.FromSeconds(600));
@@ -78,16 +76,27 @@ namespace SeleniumNunit.SimpleExamples
             var ffOptions = new FirefoxOptions();
             ffOptions.PlatformName = "Windows 10";
             ffOptions.BrowserVersion = "latest";
-            ffOptions.AddAdditionalCapability("sauce:options", _sauceOptions, true);
+
+            // Set up the new Sauce Options for C#
+            // For more information: https://wiki.saucelabs.com/display/DOCS/Selenium+W3C+Capabilities+Support+-+Beta
+            var sauceOptions = new Dictionary<string, object>();
+            sauceOptions.Add("username", _sauceUsername);
+            sauceOptions.Add("accessKey", _sauceAccessKey);
+            sauceOptions.Add("name", TestContext.CurrentContext.Test.Name);
+
+            // seleniumVersion is REQUIRED for any browser other than Chrome
+            sauceOptions.Add("seleniumVersion", "3.141.59");
+
+            ffOptions.AddAdditionalCapability("sauce:options", sauceOptions, true);
 
             // Sauce Lab's endpoint
             var uri = new Uri("http://ondemand.saucelabs.com/wd/hub");
 
             // Instantiate the driver with the Uri and browser options
             _driver = new RemoteWebDriver(uri, ffOptions);
-            
+
             _driver.Navigate().GoToUrl("https://www.saucelabs.com");
-            StringAssert.Contains("Sauce Labs", driver.Title);
+            StringAssert.Contains("Sauce Labs", _driver.Title);
         }
 
         [TearDown]
