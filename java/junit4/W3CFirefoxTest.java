@@ -66,7 +66,7 @@ public class W3CFirefoxTest  {
         sauceOpts.setCapability("seleniumVersion", "3.141.59");
         sauceOpts.setCapability("username", username);
         sauceOpts.setCapability("accessKey", accessKey);
-        sauceOpts.setCapability("tags", "w3c-chrome-tests");
+        sauceOpts.setCapability("tags", "w3c-firefox-tests");
         
         /** Below we see the use of our other capability objects, 'foxOpts' and 'sauceOpts', 
         defined in 'moz:firefoxOptions' and sauce:options respectively.
@@ -94,7 +94,7 @@ public class W3CFirefoxTest  {
             For more information visit the docs: https://junit.org/junit4/javadoc/4.12/org/junit/Test.html
     */
    @Test
-    public void w3cFireFoxTest() throws AssertionError {
+    public void browserTest() throws AssertionError {
         driver.navigate().to("https://www.saucedemo.com");
         String getTitle = driver.getTitle();
         Assert.assertEquals(getTitle, "Swag Labs");
