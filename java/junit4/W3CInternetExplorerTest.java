@@ -1,3 +1,5 @@
+package tests.base;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.After;
@@ -7,14 +9,14 @@ import org.junit.rules.TestName;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class W3CFirefoxTest  {
+public class W3CInternetExplorerTest  {
     protected WebDriver driver;
     public Boolean result;
     
@@ -34,7 +36,7 @@ public class W3CFirefoxTest  {
          * @Before is a JUnit 4 annotation that defines specific prerequisite test method behaviors.
             In the example below we:
             - Define Environment Variables for Sauce Credentials ("SAUCE_USERNAME" and "SAUCE_ACCESS_KEY")
-            - Define Firefox Options such as W3C protocol
+            - Define Internet Explorer Options such as W3C protocol
             - Define the "sauce:options" capabilities, indicated by the "sauceOpts" MutableCapability object
             - Define the WebDriver capabilities, indicated by the "caps" DesiredCapabilities object
             - Define the service URL for communicating with SauceLabs.com indicated by "sauceURL" string
@@ -50,15 +52,14 @@ public class W3CFirefoxTest  {
         String accessKey = System.getenv("SAUCE_ACCESS_KEY");
         String methodName = testName.getMethodName();
         
-        /** FirefoxOptions allows us to set browser-specific behavior such as profile settings, headless capabilities, insecure tls certs, 
+        /** ChomeOptions allows us to set browser-specific behavior such as profile settings, headless capabilities, insecure tls certs, 
         and in this example--the W3C protocol 
-        For more information see: https://seleniumhq.github.io/selenium/docs/api/java/org/openqa/selenium/firefox/FirefoxOptions.html */
-        
-        FirefoxOptions foxOpts = new FirefoxOptions();
-        foxOpts.setCapability("w3c", true);
+        For more information see: https://seleniumhq.github.io/selenium/docs/api/java/org/openqa/selenium/ie/InternetExplorerOptions.html */
+        InternetExplorerOptions ieOpts = new InternetExplorerOptions();
+        ieOpts.setCapability("w3c", true);
         
         /** The MutableCapabilities class  came into existence with Selenium 3.6.0 and acts as the parent class for 
-        all browser implementations--including the FirefoxOptions class extension.
+        all browser implementations--including the InternetExplorerOptions class extension.
         Fore more information see: https://seleniumhq.github.io/selenium/docs/api/java/org/openqa/selenium/MutableCapabilities.html */
         
         MutableCapabilities sauceOpts = new MutableCapabilities();
@@ -66,16 +67,16 @@ public class W3CFirefoxTest  {
         sauceOpts.setCapability("seleniumVersion", "3.141.59");
         sauceOpts.setCapability("username", username);
         sauceOpts.setCapability("accessKey", accessKey);
-        sauceOpts.setCapability("tags", "w3c-firefox-tests");
+        sauceOpts.setCapability("tags", "w3c-ie-tests");
         
-        /** Below we see the use of our other capability objects, 'foxOpts' and 'sauceOpts', 
-        defined in 'moz:firefoxOptions' and sauce:options respectively.
+        /** Below we see the use of our other capability objects, 'ieOpts' and 'sauceOpts', 
+        defined in InternetExplorerOptions.CAPABILITY and sauce:options respectively.
         */
         DesiredCapabilities caps = new DesiredCapabilities();
-        caps.setCapability("moz:firefoxOptions",  foxOpts);
+        caps.setCapability(InternetExplorerOptions.CAPABILITY, ieOpts);
         caps.setCapability("sauce:options", sauceOpts);
-        caps.setCapability("browserName", "firefox");
-        caps.setCapability("browserVersion", "64.0");
+        caps.setCapability("browserName", "internetexplorer");
+        caps.setCapability("browserVersion", "11.285");
         caps.setCapability("platformName", "windows 10");
         
         /** Finally, we pass our DesiredCapabilities object 'caps' as a parameter of our RemoteWebDriver instance */
