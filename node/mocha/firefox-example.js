@@ -35,7 +35,7 @@ describe('W3C Test', function() {
     beforeEach(function (done) {
         var testName = this.currentTest.title;
         driver = new webdriver.Builder().withCapabilities({
-            "browserName": 'chrome',
+            "browserName": 'firefox',
             "platform": 'Windows 10',
             "version": '61.0',
             "name": testName.toString(),
