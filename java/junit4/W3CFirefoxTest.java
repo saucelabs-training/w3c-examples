@@ -18,11 +18,8 @@ public class W3CFirefoxTest  {
     protected WebDriver driver;
     public Boolean result;
     
-     /**
-         * @Rule is a JUnit 4 annotation that defines specific test method behaviors.
-            For more information visit the wiki: https://github.com/junit-team/junit4/wiki/rules
-    */
-
+    //@Rule is a JUnit 4 annotation that defines specific test method behaviors.
+    // For more information visit the wiki: https://github.com/junit-team/junit4/wiki/rules
     @Rule
     public TestName testName = new TestName() {
         public String getMethodName() {
@@ -30,61 +27,49 @@ public class W3CFirefoxTest  {
         }
     };
     
-     /**
-         * @Before is a JUnit 4 annotation that defines specific prerequisite test method behaviors.
-            In the example below we:
-            - Define Environment Variables for Sauce Credentials ("SAUCE_USERNAME" and "SAUCE_ACCESS_KEY")
-            - Define Chrome Options such as W3C protocol
-            - Define the "sauce:options" capabilities, indicated by the "sauceOpts" MutableCapability object
-            - Define the WebDriver capabilities, indicated by the "caps" DesiredCapabilities object
-            - Define the service URL for communicating with SauceLabs.com indicated by "sauceURL" string
-            - Set the URL to sauceURl
-            - Set the driver instance to a RemoteWebDriver
-            - Pass "url" and "caps" as parameters of the RemoteWebDriver
-            For more information visit the docs: https://junit.org/junit4/javadoc/4.12/org/junit/Before.html
+    /*@Before is a JUnit 4 annotation that defines specific prerequisite test method behaviors.
+        In the example below we:
+         - Define Environment Variables for Sauce Credentials ("SAUCE_USERNAME" and "SAUCE_ACCESS_KEY")
+         - Define Chrome Options such as W3C protocol
+         - Define the "sauce:options" capabilities, indicated by the "sauceOpts" MutableCapability object
+         - Define the WebDriver capabilities, indicated by the "caps" DesiredCapabilities object
+         - Define the service URL for communicating with SauceLabs.com indicated by "sauceURL" string
+         - Set the URL to sauceURl
+         - Set the driver instance to a RemoteWebDriver
+         - Pass "url" and "caps" as parameters of the RemoteWebDriver
+        For more information visit the docs: https://junit.org/junit4/javadoc/4.12/org/junit/Before.html
     */
-
     @Before
     public void setup() throws MalformedURLException {
         String username = System.getenv("SAUCE_USERNAME");
         String accessKey = System.getenv("SAUCE_ACCESS_KEY");
         String methodName = testName.getMethodName();
         
-        /** FirefoxOptions allows us to set browser-specific behavior such as profile settings, headless capabilities, insecure tls certs, 
-        and in this example--the W3C protocol 
-        For more information see: https://seleniumhq.github.io/selenium/docs/api/java/org/openqa/selenium/firefox/FirefoxOptions.html */
-        
-        FirefoxOptions foxOpts = new FirefoxOptions();
-        foxOpts.setCapability("w3c", true);
-        
-        /** The MutableCapabilities class  came into existence with Selenium 3.6.0 and acts as the parent class for 
-        all browser implementations--including the FirefoxOptions class extension.
-        Fore more information see: https://seleniumhq.github.io/selenium/docs/api/java/org/openqa/selenium/MutableCapabilities.html */
-        
+        //FirefoxOptions allows us to set browser-specific behavior such as profile settings, headless capabilities, insecure tls certs,
+        // and in this example--the W3C protocol.
+        //For more information see: https://seleniumhq.github.io/selenium/docs/api/java/org/openqa/selenium/firefox/FirefoxOptions.html
+        FirefoxOptions firefoxOptions = new FirefoxOptions();
+
+        //The MutableCapabilities class was introduced with Selenium 3.6.0, and acts as the parent class for
+        // all browser implementations--including the FirefoxOptions class
+        //For more information see: https://seleniumhq.github.io/selenium/docs/api/java/org/openqa/selenium/MutableCapabilities.html
         MutableCapabilities sauceOpts = new MutableCapabilities();
         sauceOpts.setCapability("name", methodName);
-        sauceOpts.setCapability("seleniumVersion", "3.141.59");
         sauceOpts.setCapability("username", username);
         sauceOpts.setCapability("accessKey", accessKey);
         sauceOpts.setCapability("tags", "w3c-chrome-tests");
         
-        /** Below we see the use of our other capability objects, 'foxOpts' and 'sauceOpts', 
-        defined in 'moz:firefoxOptions' and sauce:options respectively.
-        */
-        DesiredCapabilities caps = new DesiredCapabilities();
-        caps.setCapability("moz:firefoxOptions",  foxOpts);
-        caps.setCapability("sauce:options", sauceOpts);
-        caps.setCapability("browserName", "firefox");
-        caps.setCapability("browserVersion", "64.0");
-        caps.setCapability("platformName", "windows 10");
+        //Below we see the use of our other capability object, 'sauceOpts',
+        firefoxOptions.setCapability("sauce:options", sauceOpts);
+        firefoxOptions.setCapability("platformName", "windows 10");
         
-        /** Finally, we pass our DesiredCapabilities object 'caps' as a parameter of our RemoteWebDriver instance */
-        String sauceUrl = "https://ondemand.saucelabs.com:443/wd/hub";
+        // Finally, we pass our MutableCapabilities object 'firefoxOptions' as a parameter of our RemoteWebDriver instance
+        String sauceUrl = "https://ondemand.saucelabs.com/wd/hub";
         URL url = new URL(sauceUrl);
-        driver = new RemoteWebDriver(url, caps);
+        driver = new RemoteWebDriver(url, firefoxOptions);
     }
 
-     /**
+     /*
          * @Test is a JUnit 4 annotation that defines the actual test case, along with the test execution commands.
             In the example below we:
             - Navigate to our SUT (site under test), 'https://www.saucedemo.com'

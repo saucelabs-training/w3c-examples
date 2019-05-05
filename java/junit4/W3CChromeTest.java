@@ -73,15 +73,13 @@ public class W3CChromeTest  {
         /** Below we see the use of our other capability objects, 'chromeOpts' and 'sauceOpts', 
         defined in ChromeOptions.CAPABILITY and sauce:options respectively.
         */
-        DesiredCapabilities caps = new DesiredCapabilities();
+        MutableCapabilities caps = new MutableCapabilities();
         caps.setCapability(ChromeOptions.CAPABILITY, chromeOpts);
         caps.setCapability("sauce:options", sauceOpts);
-        caps.setCapability("browserName", "googlechrome");
-        caps.setCapability("browserVersion", "71.0");
         caps.setCapability("platformName", "windows 10");
         
         /** Finally, we pass our DesiredCapabilities object 'caps' as a parameter of our RemoteWebDriver instance */
-        String sauceUrl = "https://ondemand.saucelabs.com:443/wd/hub";
+        String sauceUrl = "https://ondemand.saucelabs.com/wd/hub";
         URL url = new URL(sauceUrl);
         driver = new RemoteWebDriver(url, caps);
     }

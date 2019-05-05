@@ -47,7 +47,6 @@ public class W3CFirefoxTest {
         
         MutableCapabilities sauceOpts = new MutableCapabilities();
         sauceOpts.setCapability("name", methodName);
-        sauceOpts.setCapability("seleniumVersion", "3.141.59");
         sauceOpts.setCapability("username", username);
         sauceOpts.setCapability("accessKey", accessKey);
         sauceOpts.setCapability("tags", "w3c-chrome-tests")
@@ -58,8 +57,6 @@ public class W3CFirefoxTest {
         DesiredCapabilities caps = new DesiredCapabilities();
         caps.setCapability("moz:firefoxOptions",  foxOpts);
         caps.setCapability("sauce:options", sauceOpts);
-        caps.setCapability("browserName", "firefox");
-        caps.setCapability("browserVersion", "64.0");
         caps.setCapability("platformName", "windows 10");
         
         /** Finally, we pass our DesiredCapabilities object 'caps' as a parameter of our RemoteWebDriver instance */
