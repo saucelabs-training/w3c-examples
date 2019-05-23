@@ -36,18 +36,19 @@ describe('W3C Test', function() {
         var testName = this.currentTest.title;
         driver = new webdriver.Builder().withCapabilities({
             "browserName": 'firefox',
-            "platform": 'Windows 10',
-            "version": '61.0',
-            "name": testName.toString(),
-            "username": username,
-            "accessKey": accessKey,
+            "platformName": 'Windows 10',
+            "browserVersion": 'latest',
+            /** mozilla firefox uses w3c by default, if you're using older versions uncomment the line below
+            "alwaysMatch" : { "moz:experimental-webdriver": true },**/
             "sauce:options": {
-                "moz:firefoxOptions": {"wc3":true},
+                "username": username,
+                "accessKey": accessKey,
                 "maxDuration": 3600,
                 "idleTimeout": 1000,
-                "seleniumVersion:": '3.11.0',
+                "seleniumVersion": '3.141.59',
                 "tags": tags,
-                "build": 'w3c-sauce-mocha-tests'
+                "name": testName.toString(),
+                "build": "w3c-sauce-mocha-tests"
             }
         }).usingServer("https://ondemand.saucelabs.com:443/wd/hub").build();
 
