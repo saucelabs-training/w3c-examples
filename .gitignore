@@ -78,6 +78,6 @@ test-output/
 **/application-OVERRIDES.properties
 
 # Node Stuff
-**/node-modules
+*/node/node-modules
 *package-lock.json
 

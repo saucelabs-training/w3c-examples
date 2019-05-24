@@ -26,8 +26,10 @@ describe('W3C Test', function() {
         - OS platform to Windows 10
         - The name of the test
         - and our "sauce:options" object, here we set other test parameters such as the:
-            - selenium version, 
-            - the build name/number, 
+            - sauce labs credentials (username and accessKey)
+            - selenium version,
+            - the build name/number,
+            - test name
             - test-level timeouts,
             - test case tags
         For more information on 'beforeEach' consult the docs: https://mochajs.org/api/mocha.suite#beforeEach
@@ -36,17 +38,22 @@ describe('W3C Test', function() {
         var testName = this.currentTest.title;
         driver = new webdriver.Builder().withCapabilities({
             "browserName": 'chrome',
-            "platform": 'Windows 10',
-            "version": '61.0',
-            "name": testName.toString(),
-            "username": username,
-            "accessKey": accessKey,
+            "platformName": 'Windows 10',
+            "browserVersion": 'latest',
+            /** google chrome requires w3c to be set as chromeOptions if you're using a version lower than 75.
+             * Base on this commit: https://chromium.googlesource.com/chromium/src/+/2b49880e2481658e0702fd6fe494859bca52b39c
+             * ChromeDriver now uses w3c by default from version 75+.
+             * if you're using older versions use the line below**/
+
+            "goog:chromeOptions" : { "w3c" : true },
             "sauce:options": {
-                "goog:chromeOptions": {"wc3":true},
+                "username": username,
+                "accessKey": accessKey,
                 "maxDuration": 3600,
                 "idleTimeout": 1000,
-                "seleniumVersion:": '3.11.0',
+                "seleniumVersion:": '3.141.59',
                 "tags": tags,
+                "name": testName.toString(),
                 "build": 'w3c-sauce-mocha-tests'
             }
         }).usingServer("https://ondemand.saucelabs.com:443/wd/hub").build();
