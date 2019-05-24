@@ -26,8 +26,10 @@ describe('W3C Test', function() {
         - OS platform to Windows 10
         - The name of the test
         - and our "sauce:options" object, here we set other test parameters such as the:
-            - selenium version, 
-            - the build name/number, 
+            - sauce labs credentials (username and accessKey)
+            - selenium version,
+            - the build name/number,
+            - test name
             - test-level timeouts,
             - test case tags
         For more information on 'beforeEach' consult the docs: https://mochajs.org/api/mocha.suite#beforeEach

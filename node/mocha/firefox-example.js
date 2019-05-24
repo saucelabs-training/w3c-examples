@@ -26,6 +26,7 @@ describe('W3C Test', function() {
         - OS platform to Windows 10
         - The name of the test
         - and our "sauce:options" object, here we set other test parameters such as the:
+            - sauce labs credentials (username and accessKey)
             - selenium version, 
             - the build name/number, 
             - test-level timeouts,
