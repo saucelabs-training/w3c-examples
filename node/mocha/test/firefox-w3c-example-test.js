@@ -1,3 +1,6 @@
+const promise = require('selenium-webdriver');
+let expect = require('chai').expect;
+let webdriver = require('selenium-webdriver');
 /**
     Here we set our script dependencies (e.g. selenium-webdriver and 'assert'), and we also set some key variables such as:
         - our SauceLabs account credentials
@@ -5,14 +8,20 @@
         - any necessary tags we may use to run test reports or filters
         - the WebDriver session (indicated by 'driver')
 */
-var webdriver = require('selenium-webdriver'),
-    assert = require('assert'),
-    username = process.env.SAUCE_USERNAME,
+let username = process.env.SAUCE_USERNAME,
     accessKey = process.env.SAUCE_ACCESS_KEY,
     /* Change the baseURL to your application URL */
     baseUrl = "https://www.saucedemo.com",
-    tags = ["w3c", "demoTest", "w3c-chrome-tests", "nodeTest"],
+    tags = ["w3c", "demoTest", "w3c-firefox-tests", "nodeTest"],
     driver;
+
+/** the selenium-webdriver will eventually deprecate the promise manager, therefore you must resolve your callback methods by either:
+ * - chaining your own promises: https://github.com/SeleniumHQ/selenium/wiki/WebDriverJs#option-1-use-classic-promise-chaining
+ * - migrating to generators: https://github.com/SeleniumHQ/selenium/wiki/WebDriverJs#option-2-migrate-to-generators
+ * - or migrating to async/await (as shown in this example): https://github.com/SeleniumHQ/selenium/wiki/WebDriverJs#option-3-migrate-to-asyncawait
+ */
+
+promise.USE_PROMISE_MANAGER = false;
 /** 
     We use 'describe' in order to group test methods together. Even though we only have one test case in this example,
     structuring your project this way makes it scalable when you add tests. We can also set global-level test execution parameters such as timeouts
@@ -22,46 +31,39 @@ describe('W3C Test', function() {
     /**
         'beforeEach' is a Mocha test suite hook that allows us to set any prerequisite test method tasks. In this example we set:
         - SauceLabs.com credentials via username and accessKey
-        - Browser to chrome
+        - Browser to firefox
         - OS platform to Windows 10
         - The name of the test
         - and our "sauce:options" object, here we set other test parameters such as the:
             - sauce labs credentials (username and accessKey)
-            - selenium version,
-            - the build name/number,
-            - test name
+            - selenium version, 
+            - the build name/number, 
             - test-level timeouts,
             - test case tags
         For more information on 'beforeEach' consult the docs: https://mochajs.org/api/mocha.suite#beforeEach
     */
-    beforeEach(function (done) {
-        var testName = this.currentTest.title;
-        driver = new webdriver.Builder().withCapabilities({
-            "browserName": 'chrome',
+    beforeEach(async function () {
+        driver = await new webdriver.Builder().withCapabilities({
+            "browserName": 'firefox',
             "platformName": 'Windows 10',
             "browserVersion": 'latest',
-            /** google chrome requires w3c to be set as chromeOptions if you're using a version lower than 75.
-             * Base on this commit: https://chromium.googlesource.com/chromium/src/+/2b49880e2481658e0702fd6fe494859bca52b39c
-             * ChromeDriver now uses w3c by default from version 75+.
-             * if you're using older versions use the line below**/
-
-            "goog:chromeOptions" : { "w3c" : true },
+            /** mozilla firefox uses w3c by default, if you're using older versions uncomment the line below
+            "alwaysMatch" : { "moz:experimental-webdriver": true },**/
             "sauce:options": {
                 "username": username,
                 "accessKey": accessKey,
                 "maxDuration": 3600,
                 "idleTimeout": 1000,
-                "seleniumVersion:": '3.141.59',
+                "seleniumVersion": '3.141.59',
                 "tags": tags,
-                "name": testName.toString(),
-                "build": 'w3c-sauce-mocha-tests'
+                "name": "chrome-w3c-" + this.currentTest.title,
+                "build": "w3c-sauce-mocha-tests"
             }
         }).usingServer("https://ondemand.saucelabs.com:443/wd/hub").build();
 
-        driver.getSession().then(function (sessionid) {
+        await driver.getSession().then(function (sessionid) {
             driver.sessionID = sessionid.id_;
         });
-        done();
     });
     
     /**
@@ -72,10 +74,9 @@ describe('W3C Test', function() {
         For more information on 'afterEach' consult the docs: https://mochajs.org/api/mocha.suite#afterEach
     */
 
-    afterEach(function (done) {
-        driver.executeScript("sauce:job-result=" + (true ? "passed" : "failed"));
-        driver.quit();
-        done();
+    afterEach(async function() {
+        await driver.executeScript("sauce:job-result=" + (this.currentTest.state));
+        await driver.quit();
     });
     
     /**
@@ -87,12 +88,10 @@ describe('W3C Test', function() {
             For more information visit the docs: https://mochajs.org/api/test
     */
 
-    it('start-W3C-chrome-session', function (done) {
-        driver.get(baseUrl);
-        driver.getTitle().then(function (title) {
-            console.log("title is: " + title);
-            assert(true);
-            done();
-        });
+    it('get-title-test', async function() {
+        await driver.get(baseUrl);
+        const title = await driver.getTitle();
+        console.log('Page Title is: ' + title);
+        expect(title).equals('Swag Labs');
     });
 });
