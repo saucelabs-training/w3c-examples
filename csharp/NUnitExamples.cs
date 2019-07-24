@@ -102,6 +102,45 @@ namespace SeleniumNunit.SimpleExamples
             _driver.Navigate().GoToUrl("https://www.saucelabs.com");
             StringAssert.Contains("Sauce Labs", _driver.Title);
         }
+        
+        /// <summary>
+        /// The Test attribute is one way of marking a method inside a TestFixture class as a test.
+        /// For more information: https://github.com/nunit/docs/wiki/Test-Attribute
+        /// </summary>
+        [Test]
+        public void W3CInternetExplorerTest()
+        {
+            // Set up the browser options
+            var ieOptions = new InternetExplorerOptions();
+            ieOptions.PlatformName = "Windows 10";
+            ieOptions.BrowserVersion = "latest";
+
+            // Set up the new Sauce Options for C#
+            // For more information: https://wiki.saucelabs.com/display/DOCS/Selenium+W3C+Capabilities+Support+-+Beta
+            var sauceOptions = new Dictionary<string, object>()
+            {
+                ["username"] = _sauceUsername,
+                ["accessKey"] = _sauceAccessKey,
+                ["name"] = TestContext.CurrentContext.Test.Name,
+               
+                // Required for Internet Explorer
+                ["iedriverVersion"] = "3.12.0",
+
+                // seleniumVersion is REQUIRED for any browser other than Chrome
+                ["seleniumVersion"] = "3.141.59"
+            };
+
+            ieOptions.AddAdditionalCapability("sauce:options", sauceOptions, true);
+
+            // Sauce Lab's endpoint
+            var uri = new Uri("http://ondemand.saucelabs.com/wd/hub");
+
+            // Instantiate the driver with the Uri and browser options
+            _driver = new RemoteWebDriver(uri, ieOptions);
+
+            _driver.Navigate().GoToUrl("https://www.google.com");
+            Assert.Pass();
+        }
 
         /// <summary>
         /// This attribute is used inside a TestFixture to provide a common set of functions that are performed after each test method.
