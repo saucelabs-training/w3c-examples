@@ -4,7 +4,6 @@ import org.testng.annotations.*;
 import org.testng.asserts.*;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.JavascriptExecutor;
 
@@ -21,7 +20,7 @@ public class W3CChromeTest {
             - Define Environment Variables for Sauce Credentials ("SAUCE_USERNAME" and "SAUCE_ACCESS_KEY")
             - Define Chrome Options such as W3C protocol
             - Define the "sauce:options" capabilities, indicated by the "sauceOpts" MutableCapability object
-            - Define the WebDriver capabilities, indicated by the "caps" DesiredCapabilities object
+            - Define the WebDriver capabilities, indicated by the ChromeOptions object
             - Define the service URL for communicating with SauceLabs.com indicated by "sauceURL" string
             - Set the URL to sauceURl
             - Set the driver instance to a RemoteWebDriver
@@ -33,13 +32,6 @@ public class W3CChromeTest {
         String username = System.getenv("SAUCE_USERNAME");
         String accessKey = System.getenv("SAUCE_ACCESS_KEY");
         String methodName = method.getName();
-        
-        /** ChomeOptions allows us to set browser-specific behavior such as profile settings, headless capabilities, insecure tls certs, 
-        and in this example--the W3C protocol 
-        For more information see: https://seleniumhq.github.io/selenium/docs/api/java/org/openqa/selenium/chrome/ChromeOptions.html */
-        
-        ChromeOptions chromeOpts = new ChromeOptions();
-        chromeOpts.setExperimentalOption("w3c", true);
 
         /** The MutableCapabilities class  came into existence with Selenium 3.6.0 and acts as the parent class for 
         all browser implementations--including the ChromeOptions class extension.
@@ -50,17 +42,26 @@ public class W3CChromeTest {
         sauceOpts.setCapability("seleniumVersion", "3.141.59");
         sauceOpts.setCapability("username", username);
         sauceOpts.setCapability("accessKey", accessKey);
-        sauceOpts.setCapability("tags", "w3c-chrome-tests")
-        
-        /** Below we see the use of our other capability objects, 'chromeOpts' and 'sauceOpts', 
-        defined in ChromeOptions.CAPABILITY and sauce:options respectively.
+        sauceOpts.setCapability("tags", "w3c-chrome-tests");
+
+        /** Below we see set the ChromeOptions of the browser to connect to a Chrome instance of
+         * a browser. We can also set Chrome-specific options in this object as well.
         */
-        DesiredCapabilities caps = new DesiredCapabilities();
-        caps.setCapability(ChromeOptions.CAPABILITY,  chromeOpts);
+        ChromeOptions options = new ChromeOptions();
+        options.setCapability("browserName", "googlechrome");
+        options.setCapability("browserVersion", "71.0");
+        options.setCapability("platformName", "windows 10");
+
+        /** ChomeOptions allows us to set browser-specific behavior such as profile settings, headless capabilities, insecure tls certs,
+         and in this example--the W3C protocol
+         For more information see: https://seleniumhq.github.io/selenium/docs/api/java/org/openqa/selenium/chrome/ChromeOptions.html */
+
+        options.setExperimentalOption("w3c", true);
+
+
+        /** Set the sauceOptions capability to make use of Sauce's capabilities */
         caps.setCapability("sauce:options", sauceOpts);
-        caps.setCapability("browserName", "googlechrome");
-        caps.setCapability("browserVersion", "71.0");
-        caps.setCapability("platformName", "windows 10");
+
         
         /** Finally, we pass our DesiredCapabilities object 'caps' as a parameter of our RemoteWebDriver instance */
         String sauceUrl = "https://ondemand.saucelabs.com:443/wd/hub";

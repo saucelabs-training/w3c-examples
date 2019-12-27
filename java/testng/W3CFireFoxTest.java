@@ -33,13 +33,6 @@ public class W3CFirefoxTest {
         String username = System.getenv("SAUCE_USERNAME");
         String accessKey = System.getenv("SAUCE_ACCESS_KEY");
         String methodName = method.getName();
-        
-        /** FirefoxOptions allows us to set browser-specific behavior such as profile settings, headless capabilities, insecure tls certs, 
-        and in this example--the W3C protocol 
-        For more information see: https://seleniumhq.github.io/selenium/docs/api/java/org/openqa/selenium/firefox/FirefoxOptions.html */
-        
-        FirefoxOptions foxOpts = new FirefoxOptions();
-        foxOpts.setCapability("w3c", true);
 
        /** The MutableCapabilities class  came into existence with Selenium 3.6.0 and acts as the parent class for 
         all browser implementations--including the FirefoxOptions class extension.
@@ -50,18 +43,19 @@ public class W3CFirefoxTest {
         sauceOpts.setCapability("seleniumVersion", "3.141.59");
         sauceOpts.setCapability("username", username);
         sauceOpts.setCapability("accessKey", accessKey);
-        sauceOpts.setCapability("tags", "w3c-chrome-tests")
-        
-        /** Below we see the use of our other capability objects, 'foxOpts' and 'sauceOpts', 
-        defined in 'moz:firefoxOptions' and sauce:options respectively.
-        */
-        DesiredCapabilities caps = new DesiredCapabilities();
-        caps.setCapability("moz:firefoxOptions",  foxOpts);
-        caps.setCapability("sauce:options", sauceOpts);
-        caps.setCapability("browserName", "firefox");
-        caps.setCapability("browserVersion", "64.0");
-        caps.setCapability("platformName", "windows 10");
-        
+        sauceOpts.setCapability("tags", "w3c-firefox-tests")
+
+        /** FirefoxOptions allows us to set browser-specific behavior such as profile settings, headless capabilities, insecure tls certs,
+         and in this example--the W3C protocol
+         For more information see: https://seleniumhq.github.io/selenium/docs/api/java/org/openqa/selenium/firefox/FirefoxOptions.html */
+
+        FirefoxOptions foxOpts = new FirefoxOptions();
+        options.setCapability("w3c", true);
+        options.setCapability("browserName", "firefox");
+        options.setCapability("browserVersion", "64.0");
+        options.setCapability("platformName", "windows 10");
+        option.setCapability("sauce:options", sauceOpts);
+
         /** Finally, we pass our DesiredCapabilities object 'caps' as a parameter of our RemoteWebDriver instance */
         String sauceUrl = "https://ondemand.saucelabs.com:443/wd/hub";
         URL url = new URL(sauceUrl);
